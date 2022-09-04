@@ -1,0 +1,22 @@
+{
+  "name": "employee-tracker--sql",
+  "version": "1.0.0",
+  "description": "build a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL. npm i  npm i inquirer figlet chalk",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaihuan-huang/Employee-Tracker--SQL.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kaihuan-huang/Employee-Tracker--SQL/issues"
+  },
+  "homepage": "https://github.com/kaihuan-huang/Employee-Tracker--SQL#readme"
+}
