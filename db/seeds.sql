@@ -6,8 +6,8 @@ INSERT INTO department (department_name)
          ("Sales"),
          ("Server");
 
-INSERT INTO roles (title, salary, id, department_id)
-    VALUE("Sales Lead", 100000, 1, 4),
+INSERT INTO roles (title, salary, department_id)
+    VALUE("Sales Lead", 100000, 4),
          ("Sales", 80000, 4),
          ("Engineer Lead", 150000, 1),
          ("Software Engineer", 120000, 1),
