@@ -1,13 +1,12 @@
-
 INSERT INTO department (department_name)
-    VALUE("Engineering"),
+    VALUES("Engineering"),
          ("Finance"),
          ("Legal"),
          ("Sales"),
          ("Server");
 
-INSERT INTO roles (title, salary, department_id)
-    VALUE("Sales Lead", 100000, 4),
+INSERT INTO role (title, salary, department_id)
+    VALUES("Sales Lead", 100000, 4),
          ("Sales", 80000, 4),
          ("Engineer Lead", 150000, 1),
          ("Software Engineer", 120000, 1),
@@ -17,7 +16,7 @@ INSERT INTO roles (title, salary, department_id)
          ("Layer", 190000, 3);
         
 INSERT INTO employee(first_name, last_name, role_id, manager_id)
-    VALUE("John", "Doe", 1, Null),
+    VALUES("John", "Doe", 1, Null),
          ("Mike", "Chan", 2, 1),
          ("Ashley", "Rodrihuez", 3, Null),
          ("Kevin", "Tupik", 4, 3),
