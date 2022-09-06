@@ -21,7 +21,8 @@
   "homepage": "https://github.com/kaihuan-huang/Employee-Tracker--SQL#readme",
   "dependencies": {
     "dotenv": "^16.0.2",
-    "inquirer": "^9.1.1",
+    "figlet": "^1.5.2",
+    "inquirer": "^8.2.4",
     "mysql2": "^2.3.3",
     "sequelize": "^6.21.4"
   }
