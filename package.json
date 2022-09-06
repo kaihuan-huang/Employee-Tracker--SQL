@@ -18,5 +18,11 @@
   "bugs": {
     "url": "https://github.com/kaihuan-huang/Employee-Tracker--SQL/issues"
   },
-  "homepage": "https://github.com/kaihuan-huang/Employee-Tracker--SQL#readme"
+  "homepage": "https://github.com/kaihuan-huang/Employee-Tracker--SQL#readme",
+  "dependencies": {
+    "dotenv": "^16.0.2",
+    "inquirer": "^9.1.1",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.21.4"
+  }
 }

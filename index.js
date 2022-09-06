@@ -24,6 +24,7 @@ connection.connect((error)=>{
 //promptUser() 
 const promptUser = () => {
     inquirer.prompt([
+        
         {
             type: 'list',
             name: 'options',
@@ -124,4 +125,40 @@ const promptDepartmentBudgets = () => {
         console.log(sql);
         promptUser();
     });
+};
+
+//Add 
+const addEmployee = () =>{
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'firstName',
+            message: "What is the employee's first name?"
+        },
+        {
+            type: 'input',
+            name: 'lastName',
+            message: "What is the employee's last name?"
+        },
+
+    ]).then(answer => {
+        const addEmployeeInfo = [answer.firstName, answer.lastName]
+        const roleSql = `SELECT role.id, role.title FROM role`;
+        connection.promise().query(roleSql, (err, data) => {
+            if (err) throw err;
+            const roles = data.map(({ id, title }) => ({ name: title, value: id }));
+            console.log(roles);
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'role',
+                    message:"What is the employee's role?",
+                    choices: roles
+                }
+            ])
+
+
+        })
+
+    })
 }
