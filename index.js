@@ -51,7 +51,20 @@ const promptUser = () => {
     ])
     .then((answer) => {
         console.log(answer);
-        // const {choices} = answer;
+        switch(answer.options){
+            case 'View All Employees': return promptAllEmployees();
+            case 'View All Roles': return promptAllRoles();
+            case 'View All Departments': return promptAllDepartments();
+            case 'View All Employees By Department': return promptAllEmployeesByDepartment();
+            case 'View Department Budgets': return promptDepartmentBudgets();
+            // case 'Update Employee Role': return updateEmployeeRole();
+            case 'Add Employee': return addEmployee();
+            case 'Add Role': return addRole();
+            case 'Add Department': return addDepartment();
+
+            default: promptUser();
+        }
+        // const {options} = answer;
         // promptAllEmployees();
         // promptAllRoles();
         // promptAllDepartments();
@@ -59,7 +72,8 @@ const promptUser = () => {
         // promptDepartmentBudgets();
         // addEmployee();
         // addRole();
-        addDepartment();
+        // addDepartment();
+        // updateEmployeeRole();
         // if (choices === 'View All Employees') {
         //     promptAllEmployees();
         // }
@@ -72,15 +86,10 @@ const promptUser = () => {
     }
 )}
 
-// switch(answer){
-//     case 'View All Employees': return promptAllEmployees();
-//     case 'View All Roles': return promptAllRoles();
-//     case 'View All Departments': return promptAllDepartments();
-//     case 'View All Employees By Department': return promptAllEmployeesByDepartment();
-//     case 'View Department Budgets': return promptDepartmentBudgets();
-// }
+
 
 // --------------------------------------------------- View --------------------------------------------------------------------
+
 const promptAllEmployees = () => {
     
     let sql = `SELECT employee.id,
@@ -96,9 +105,9 @@ const promptAllEmployees = () => {
                 ORDER BY employee.id`;
     connection.query(sql, (error, response) => {
         if (error) throw error;
-        console.log("Response: ", response);
+        console.table(response);
         promptUser();
-        console.log(sql);
+        
     });
 };
 
@@ -109,18 +118,37 @@ const promptAllRoles = () => {
                 INNER JOIN department ON department.id = role.department_id`;
     connection.query(sql, (error, response) => {
         if (error) throw error;
-        console.log("Response: ", response);
+        console.table(response);
         promptUser();
     });
-    console.log(sql);
 }
+//     connection.promise().query(sql, row) 
+//     .then(response => { 
+//         console.table(response);
+//         promptUser();
+//     }).catch(error => {
+//         throw error;
+//     });
+// }
+
+// // get the client
+// const mysql = require('mysql2');
+// // create the connection
+// const con = mysql.createConnection(
+//   {host:'localhost', user: 'root', database: 'test'}
+// );
+// con.promise().query("SELECT 1")
+//   .then( ([rows,fields]) => {
+//     console.log(rows);
+//   })
+//   .catch(console.log)
+//   .then( () => con.end());
 
 const promptAllDepartments = () => {
     let sql = `SELECT * FROM employees.department`;
     connection.query(sql, (error, response) => {
         if (error) throw error;
-        console.log("Response: ", response);
-        console.log(sql);
+        console.table(response);
         promptUser();
     });
 }
@@ -128,12 +156,11 @@ const promptAllDepartments = () => {
 const promptAllEmployeesByDepartment = () => {
     let sql = `SELECT employee.first_name, employee.last_name, department.department_name AS department
                 FROM employee
-                LEFT JOIN role ON employee.role_id = role_id
+                LEFT JOIN role ON employee.role_id = role.id
                 LEFT JOIN department ON role.department_id = department.id`;
     connection.query(sql, (error, response) => {
         if (error) throw error;
-        console.log("Response: ", response);
-        console.log(sql);
+        console.table(response);
         promptUser();
     });
 }
@@ -146,8 +173,7 @@ const promptDepartmentBudgets = () => {
                 INNER JOIN department ON role.department_id = department.id GROUP BY role.department_id`;
     connection.query(sql, (error, response) => {
         if (error) throw error;
-        console.log("Response: ", response);
-        console.log(sql);
+        console.table(response);
         promptUser();
     });
 };
@@ -225,24 +251,23 @@ const addEmployee = () =>{
 
 //Add New Role
 const addRole = () => {
-    const sql = 'Select * FROM department';
+    const sql = 'Select * FROM role';
     connection.query(sql, (error, response) => {
         if (error) throw error;
-        let deptNamesArray = [];
-        response.forEach((department) => {deptNamesArray.push(department.department_name);});
-        console.log('addRole', response);
-        deptNamesArray.push('Create Department');
+        let roleNamesArray = [];
+        response.forEach((role) => {roleNamesArray.push(role.title);});
+        console.table('addRole', response);
         inquirer.prompt([
             {
                 type: 'list',
                 name: 'departmentName',
-                message: "Which department is this new role in?",
-                choices: deptNamesArray
+                message: "Which is this new role in?",
+                choices: roleNamesArray
             }
         ]).then( (answer) => {
             console.log('departmentName', answer);
             if (answer.departmentName === 'Create Department') {
-                this.addDepartment();
+                return addDepartment();
             }
         });
 
@@ -299,3 +324,17 @@ const addDepartment = () => {
 };
 
 // --------------------------------------------------- UPDATE --------------------------------------------------------------------
+//'Update Employee Role'
+// const updateEmployeeRole = () => {
+//     let sql =       `SELECT employee.id, employee.first_name, employee.last_name, role.id AS "role_id"
+//                     FROM employee, role, department WHERE department.id = role.department_id AND role.id = employee.role_id`;
+//     connection.query(sql, (error, response) => {
+//         if (error) throw error;
+//         console.log('updateEmployeeRole',response);
+
+//         let employeeNameArray = [];
+//         response.forEach()
+
+//     })
+
+// }
