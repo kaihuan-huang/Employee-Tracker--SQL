@@ -8,6 +8,8 @@ const connection = require('./config/connection');
 const inquirer = require('inquirer');
 const figlet = require('figlet');
 const chalk = require('chalk');
+const { response } = require('express');
+const { message } = require('statuses');
 
 //Database connect and starter Title
 connection.connect((error)=>{
@@ -49,13 +51,15 @@ const promptUser = () => {
     ])
     .then((answer) => {
         console.log(answer);
-        const {choices} = answer;
+        // const {choices} = answer;
         // promptAllEmployees();
         // promptAllRoles();
         // promptAllDepartments();
         // promptAllEmployeesByDepartment();
         // promptDepartmentBudgets();
-        addEmployee();
+        // addEmployee();
+        // addRole();
+        addDepartment();
         // if (choices === 'View All Employees') {
         //     promptAllEmployees();
         // }
@@ -75,6 +79,8 @@ const promptUser = () => {
 //     case 'View All Employees By Department': return promptAllEmployeesByDepartment();
 //     case 'View Department Budgets': return promptDepartmentBudgets();
 // }
+
+// --------------------------------------------------- View --------------------------------------------------------------------
 const promptAllEmployees = () => {
     
     let sql = `SELECT employee.id,
@@ -146,6 +152,7 @@ const promptDepartmentBudgets = () => {
     });
 };
 
+// --------------------------------------------------- ADD --------------------------------------------------------------------
 //Add New Employee
 const addEmployee = () =>{
     inquirer.prompt([
@@ -215,3 +222,80 @@ const addEmployee = () =>{
 
     })
 }
+
+//Add New Role
+const addRole = () => {
+    const sql = 'Select * FROM department';
+    connection.query(sql, (error, response) => {
+        if (error) throw error;
+        let deptNamesArray = [];
+        response.forEach((department) => {deptNamesArray.push(department.department_name);});
+        console.log('addRole', response);
+        deptNamesArray.push('Create Department');
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'departmentName',
+                message: "Which department is this new role in?",
+                choices: deptNamesArray
+            }
+        ]).then( (answer) => {
+            console.log('departmentName', answer);
+            if (answer.departmentName === 'Create Department') {
+                this.addDepartment();
+            }
+        });
+
+        const addRoleResume = (departmentData) => {
+            inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'title',
+                    message: "What is the title of the new role?"
+                },
+                {
+                    type: 'input',
+                    name: 'salary',
+                    message: "What is the title of the new role?"
+                },
+            ]).then((answer) => {
+                console.log('addRoleResume', answer);
+                response.forEach((department) => {
+                    if (departmentData.departmentName === department.department_name)
+                        {departmentId = department.id}
+
+                });
+                let sql = `INSERT INTO role(title, salary, department_id) VALUES (?, ?, ?)`;
+                let addRoleInfo = [answer.title, answer.salary, departmentId];
+
+                connection.query(sql, addRoleInfo, (error) => {
+                    if (error) throw error;
+                    console.log('addRoleInfo', addRoleInfo);
+                    console.log('New Role Created!')
+                    promptAllRoles();
+                })
+            });
+        };
+    });
+};
+
+// Add New Department
+const addDepartment = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'newDepartment',
+            message: "What is the name of the new department?"
+        }
+    ]).then((answer) => {
+        let sql = `INSERT INTO department(department_name) VALUES (?)`;
+        connection.query(sql, answer.newDepartment, (error, response) => {
+            if (error) throw error;
+            console.log(response);
+            console.log(answer.newDepartment + ` Department successfully created!`)
+            promptAllDepartments()
+        });
+    });
+};
+
+// --------------------------------------------------- UPDATE --------------------------------------------------------------------
