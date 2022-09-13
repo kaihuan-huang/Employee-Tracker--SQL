@@ -53,6 +53,8 @@ const promptUser = () => {
           "Add Role",
           "Add Department",
           "Update Employee Role",
+          "Delete Employee",
+          "Delete Role",
           "Exit",
         ],
       },
@@ -78,14 +80,21 @@ const promptUser = () => {
           return addDepartment();
         case "Update Employee Role":
           return updateEmployeeRole();
+        case "Delete Employee":
+          return deleteEmployee();
+        case "Delete Role":
+          return deleteRole();
         default:
-          promptUser();
+          end();
       }
     });
 };
 
 // --------------------------------------------------- View --------------------------------------------------------------------
-
+function end(){
+  console.log('Bye!')
+  process.exit();
+}
 const promptAllEmployees = () => {
   let sql = `SELECT employee.id,
                 employee.first_name,
@@ -100,13 +109,12 @@ const promptAllEmployees = () => {
                 ORDER BY employee.id`;
   return new Promise((resolve, reject) => {
     connection.query(sql, (error, response) => {
-
-        if (error) reject (error );
-        console.table(response);
-        resolve(response);
-      });
-
-  })
+      if (error) reject(error);
+      console.table(response);
+      resolve(response);
+      promptUser();
+    });
+  });
 };
 
 const promptAllRoles = () => {
@@ -368,9 +376,57 @@ const addDepartment = () => {
 // };
 
 const updateEmployeeRole = () => {
-    
   promptAllEmployees().then((rows) => {
-    console.log('row',rows);
+    console.log("row", rows);
+    let employees = rows;
+    const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
+      name: `${first_name} ${last_name}`,
+      value: id,
+    }));
+
+    let sql = `SELECT role.id, role.title FROM role`;
+    connection.query(sql, (error, role) => {
+      if (error) throw error;
+      console.table(role);
+      const roleChoices = role.map(({ id, title }) => ({
+        title: title,
+        value: id,
+      }));
+
+      inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "employeeToUpdate",
+          choices: employeeChoices,
+          message: "Pick one employee to update their role.",
+        },
+        {
+          type: "list",
+          name: "roleToUpdate",
+          choices: roleChoices,
+          message: "Pick one role to update.",
+        },
+      ])
+      .then((data) => {
+        console.log(data.employeeToUpdate);
+        console.log(data.roleToUpdate);
+        let sql = `UPDATE employee SET role_id = ? WHERE id = ?`;
+        connection.query(sql, [data.roleToUpdate, data.employeeToUpdate], (error) => {
+          if (error) throw error;
+          console.log("Employee Deleted");
+          promptAllEmployees();
+        });
+      });
+    });
+  });
+};
+
+// --------------------------------------------------- DELETE --------------------------------------------------------------------
+
+const deleteEmployee = () => {
+  promptAllEmployees().then((rows) => {
+    console.log("row", rows);
     let employees = rows;
     const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
       name: `${first_name} ${last_name}`,
@@ -380,18 +436,51 @@ const updateEmployeeRole = () => {
       .prompt([
         {
           type: "list",
-          name: "employeeToUpdate",
+          name: "employeeToDelete",
           choices: employeeChoices,
-          message: "Pick one employee to update their role.",
+          message: "Pick one employee to delete",
         },
       ])
-      .then((data) => {
-        console.log(data.employeeToUpdate);
-        promptUser();
+      .then((answer) => {
+        console.log(answer.employeeToDelete);
+        let sql = `DELETE FROM employee WHERE id = ?`;
+        connection.query(sql, answer.employeeToDelete, (error) => {
+          if (error) throw error;
+          console.log("Employee Deleted");
+          promptAllEmployees();
+        });
       });
   });
 };
 
+// const deleteRole = () => {
+//   promptAllRoles().then((rows) => {
+//     console.log("row", rows);
+//     let employees = rows;
+//     const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
+//       name: `${first_name} ${last_name}`,
+//       value: id,
+//     }));
+//     inquirer
+//       .prompt([
+//         {
+//           type: "list",
+//           name: "employeeToDelete",
+//           choices: employeeChoices,
+//           message: "Pick one employee to delete",
+//         },
+//       ])
+//       .then((answer) => {
+//         console.log(answer.employeeToDelete);
+//         let sql = `DELETE FROM employee WHERE id = ?`;
+//         connection.query(sql, answer.employeeToDelete, (error) => {
+//           if (error) throw error;
+//           console.log("Employee Deleted");
+//           promptAllEmployees();
+//         });
+//       });
+//   });
+// };
 
 /*
  Employees thinking process, pseudo code:
