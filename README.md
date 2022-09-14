@@ -11,17 +11,18 @@
 * [Questions](#questions)
 
 ## Description
-Built a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL.
+The content management systems (CMS): Employee-Tracker--SQL is a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL.
 
 - Deployed link: https://github.com/kaihuan-huang/Employee-Tracker--SQL
 
 - Gitpage link: https://kaihuan-huang.github.io/Employee-Tracker--SQL
 
 ## More details
-
+```
 AS A business owner
 I WANT to be able to view and manage the departments, roles, and employees in my company
 SO THAT I can organize and plan my business
+
 GIVEN a command-line application that accepts user input
 WHEN I start the application
 THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
@@ -39,29 +40,38 @@ WHEN I choose to add an employee
 THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
 WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database
-
+```
 
 ## Assets
 
 The following images demonstrate the web application's appearance and functionality:
 
 ![Employee-Tracker--SQL](images/pic.png)
+![database](images/database.png)
  
 ## Installation 
 The user should clone the repository from GitHub and download Node. 
 Run `npm i ` to install.
-Run npm i inquirer figlet chalk.
+Run `npm i inquirer figlet chalk`.
 Run `node index.js ` to start the Employee-Tracker--SQL.
 
 ## Usage 
 Use inquirer from your command line to answer questions about your project.
-View walk through video here - [youtu.be.com](https://youtu.be/LQ2bB67NEbk)<br>
+View walk through video here - [Employee-Tracker--SQL](https://youtu.be/LQ2bB67NEbk)<br>
 
 
 ## Contributing 
 Contributors should read the installation section. 
 
-
+## Technologies used
+```
+ Node.js
+ Inquirer 
+ Express.js API 
+ Sequelize
+ MySQL database
+ Dotenv Package
+```
 ## Questions
 If you have any questions about this projects, please contact me directly at huangkaihuan0216@gmail.com. You can view more of my projects at https://github.com/kaihuan-huang.
 
